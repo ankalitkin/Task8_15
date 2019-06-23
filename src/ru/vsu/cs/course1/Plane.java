@@ -82,6 +82,13 @@ public class Plane implements Icon {
 
             }
         });
+        //!!!!!!!!!!!!
+        points.add(new Point(100, 300, nextZ()));
+        points.add(new Point(100, 100, nextZ()));
+        points.add(new Point(300, 100, nextZ()));
+        points.add(new Point(300, 300, nextZ()));
+        points.add(new Point(400, 200, nextZ()));
+        //!!!!!!!!!!!!
     }
 
     @Override
@@ -90,18 +97,21 @@ public class Plane implements Icon {
         g.setRenderingHints(rh);
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, getIconWidth(), getIconHeight());
-        for(Point point : points) {
+        for (int i = 0; i < points.size(); i++) {
+            Point point = points.get(i);
             g.setColor(Color.BLUE);
-            g.fillRect(point.x-dx, point.y-dy, 2*dx, 2*dy);
+            g.fillRect(point.x - dx, point.y - dy, 2 * dx, 2 * dy);
+            g.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+            g.drawString(String.valueOf(i), point.x + dx, point.y + dy);
         }
-        AtomicReference<List<Point>> ref = new AtomicReference<>();
-        String perimeter = String.valueOf(getPerimeter(ref));
-        List<Point> list = ref.get();
+        AtomicReference<List<Integer>> ref = new AtomicReference<>();
+        String perimeter = getPerimeter(ref);
+        List<Integer> list = ref.get();
         if(list != null) {
             int size = list.size();
             for (int i = 0; i < size; i++) {
-                Point p1 = list.get(i);
-                Point p2 = list.get((i + 1) % size);
+                Point p1 = points.get(list.get(i));
+                Point p2 = points.get(list.get((i + 1) % size));
                 g.setColor(Color.RED);
                 g.drawLine(p1.x, p1.y, p2.x, p2.y);
             }
@@ -146,8 +156,8 @@ public class Plane implements Icon {
         return p;
     }
 
-    public double getPerimeter(AtomicReference<List<Point>> ref) {
-            return PolygoneUtils.getMaxPerimeter(points, ref);
+    public String getPerimeter(AtomicReference<List<Integer>> ref) {
+            return String.format("%.2f", PolygoneUtils.getMaxPerimeter(points, ref));
     }
 
 }

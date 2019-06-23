@@ -7,10 +7,9 @@ public class MainForm {
     private JPanel rootPanel;
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Task 8_15 @kalitkin_a_v");
+        JFrame frame = new JFrame("Task 8_15 by @kalitkin_a_v");
         frame.setContentPane(new MainForm().rootPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //frame.pack();
         frame.setSize(512, 512);
         frame.setVisible(true);
     }
