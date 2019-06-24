@@ -54,14 +54,14 @@ class PolygonUtils {
         }
     }
 
-    static double getMaxPerimeter(List<Point> points, AtomicReference<Integer[]> ref) {
+    static double getMaxPerimeter(List<Point> points, AtomicReference<Integer[]> ref, int maxCrossings) {
         if (points.size() < 2)
             return 0;
         LinkedList<Integer> list = new LinkedList<>();
         int size = points.size();
         for (int i = 0; i < size; i++)
             list.add(i);
-        Perimeter res = getMaxPerimeter(points, list, new Integer[size], 0);
+        Perimeter res = getMaxPerimeter(points, list, new Integer[size], 0, 0, maxCrossings);
         if (res == null)
             return 0;
         if (ref != null)
@@ -69,7 +69,7 @@ class PolygonUtils {
         return res.value;
     }
 
-    private static Perimeter getMaxPerimeter(List<Point> points, LinkedList<Integer> list, Integer[] way, int next) {
+    private static Perimeter getMaxPerimeter(List<Point> points, LinkedList<Integer> list, Integer[] way, int next, int crossCount, int maxCrossings) {
         if (next > 3) {
             Point p1 = points.get(way[next - 2]);
             Point p2 = points.get(way[next - 1]);
@@ -77,7 +77,8 @@ class PolygonUtils {
                 Point p3 = points.get(way[i]);
                 Point p4 = points.get(way[i + 1]);
                 if (areSegmentsCrossing(p1, p2, p3, p4))
-                    return null;
+                    if(++crossCount > maxCrossings)
+                        return null;
             }
         }
         if (list.size() == 0) {
@@ -87,7 +88,8 @@ class PolygonUtils {
                 Point p3 = points.get(way[i]);
                 Point p4 = points.get(way[i + 1]);
                 if (areSegmentsCrossing(p1, p2, p3, p4))
-                    return null;
+                    if(++crossCount > maxCrossings)
+                        return null;
             }
             return new Perimeter(way, getLen(points, way));
         }
@@ -101,7 +103,7 @@ class PolygonUtils {
             if (next == 1 && newWay[next] > (points.size() + 1) / 2)
                 break;
             newList.remove(i);
-            Perimeter res = getMaxPerimeter(points, newList, newWay, next + 1);
+            Perimeter res = getMaxPerimeter(points, newList, newWay, next + 1, crossCount, maxCrossings);
             if (res != null && (maxRes == null || res.value > maxRes.value))
                 maxRes = res;
         }

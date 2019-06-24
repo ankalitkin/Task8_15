@@ -1,13 +1,14 @@
 package ru.vsu.cs.course1;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
-
 import ru.vsu.cs.course1.Plane.Point;
 
 public class Editor implements Icon {
@@ -19,11 +20,13 @@ public class Editor implements Icon {
     private JLabel label;
     private Plane plane;
     private Point selected;
+    private JSpinner spinner;
 
-    Editor(Plane plane, JLabel label, JComponent parent) {
+    Editor(Plane plane, JLabel label, JComponent parent, JSpinner spinner) {
         this.plane = plane;
         this.parent = parent;
         this.label = label;
+        this.spinner = spinner;
         rh = new HashMap<>();
         rh.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         label.addMouseListener(new MouseListener() {
@@ -52,13 +55,18 @@ public class Editor implements Icon {
         label.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                onMouseDragged(e, label);
+                onMouseDragged(e);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
             }
         });
+        spinner.addChangeListener(e -> repaint());
+    }
+
+    private void repaint() {
+        label.paintImmediately(0, 0, getIconWidth(), getIconHeight());
     }
 
     private void onMousePressed(MouseEvent e) {
@@ -69,20 +77,20 @@ public class Editor implements Icon {
             plane.points.remove(selected);
             selected = null;
         }
-        label.paintImmediately(0, 0, getIconWidth(), getIconHeight());
+        repaint();
     }
 
     private void onMouseReleased() {
         selected = null;
     }
 
-    private void onMouseDragged(MouseEvent e, JLabel label) {
+    private void onMouseDragged(MouseEvent e) {
         if (selected == null)
             return;
         selected.x = e.getX();
         selected.y = e.getY();
         selected.z = plane.nextZ();
-        label.paintImmediately(0, 0, getIconWidth(), getIconHeight());
+        repaint();
     }
 
     @Override
@@ -102,7 +110,7 @@ public class Editor implements Icon {
         }
 
         AtomicReference<Integer[]> ref = new AtomicReference<>();
-        String perimeter = plane.getPerimeter(ref);
+        String perimeter = plane.getPerimeter(ref, getMaxCrossings());
         Integer[] list = ref.get();
         if (list != null) {
             int size = list.length;
@@ -118,6 +126,14 @@ public class Editor implements Icon {
         g.setColor(Color.BLUE);
         int width = g.getFontMetrics().stringWidth(perimeter);
         g.drawString(perimeter, getIconWidth() - width - 10, getIconHeight() - 10);
+    }
+
+    private int getMaxCrossings() {
+        try {
+            return Integer.valueOf(spinner.getValue().toString());
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     @Override

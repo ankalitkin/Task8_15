@@ -39,8 +39,8 @@ class Plane {
         return p;
     }
 
-    String getPerimeter(AtomicReference<Integer[]> ref) {
-        return String.format("%.2f", PolygonUtils.getMaxPerimeter(points, ref));
+    String getPerimeter(AtomicReference<Integer[]> ref, int maxCrossings) {
+        return String.format("%.2f", PolygonUtils.getMaxPerimeter(points, ref, maxCrossings));
     }
 
 }
