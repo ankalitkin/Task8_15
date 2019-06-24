@@ -81,7 +81,6 @@ class PolygonUtils {
             }
         }
         if (list.size() == 0) {
-            System.out.println(next);
             Point p1 = points.get(way[way.length - 1]);
             Point p2 = points.get(way[0]);
             for (int i = 1; i < way.length - 2; i++) {
