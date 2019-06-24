@@ -16,16 +16,17 @@ class Plane {
 
     ArrayList<Point> points = new ArrayList<>();
     private int z;
-    int dx = 4, dy = 4;
 
     int nextZ() {
         return z++;
     }
 
-    Point getClosest(int x, int y) {
+    Point getClosest(int x, int y, int dx, int dy) {
         Point closest = null;
         for (Point point : points) {
-            if (Math.abs(x - point.x) < dx && Math.abs(y - point.y) < dy && (closest == null || point.x > closest.z)) {
+            if (Math.abs(x - point.x) < dx
+                    && Math.abs(y - point.y) < dy
+                    && (closest == null || point.x > closest.z)) {
                 closest = point;
             }
         }
