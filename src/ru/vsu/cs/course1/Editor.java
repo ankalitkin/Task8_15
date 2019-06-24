@@ -38,7 +38,7 @@ public class Editor implements Icon {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                onMouseReleased(e);
+                onMouseReleased();
             }
 
             @Override
@@ -72,7 +72,7 @@ public class Editor implements Icon {
         label.paintImmediately(0, 0, getIconWidth(), getIconHeight());
     }
 
-    private void onMouseReleased(MouseEvent e) {
+    private void onMouseReleased() {
         selected = null;
     }
 
