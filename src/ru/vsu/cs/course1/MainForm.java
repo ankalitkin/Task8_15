@@ -16,7 +16,7 @@ public class MainForm {
 
     private MainForm() {
         JLabel label = new JLabel();
-        label.setIcon(new Plane(label, rootPanel));
+        label.setIcon(new Editor(label, rootPanel));
         rootPanel.setLayout(new GridLayout());
         rootPanel.add(label);
     }
